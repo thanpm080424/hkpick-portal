@@ -3,147 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Secure Web App - Ứng Dụng Web Bảo Mật</title>
+  <title>HKPick Auto Tool 1ms - Cổng Tải & Cập Nhật</title>
 
-  <!-- PWA Manifest & Icons -->
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <!-- Icons -->
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
-  
-  <!-- Cấu hình hiển thị độc lập trên di động -->
-  <meta name="theme-color" content="#6366f1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="SecureApp" />
+  <meta name="theme-color" content="#f59e0b" />
 
   <!-- CSS Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body oncontextmenu="return false;">
   <div class="container">
     
     <!-- Header -->
     <header class="app-header">
       <div class="brand">
-        <img src="icons/icon-192.png" alt="App Icon" class="brand-icon" />
+        <img src="icons/icon-192.png" alt="HKPick Icon" class="brand-icon" style="box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);" />
         <div>
-          <h1 class="brand-title">SecureApp</h1>
-          <p class="brand-sub">Bảo mật • Tự cập nhật • Không file APK</p>
+          <h1 class="brand-title" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            HKPick 1ms
+          </h1>
+          <p class="brand-sub">Auto Pick Siêu Tốc • Tối Ưu LDPlayer & Android</p>
         </div>
       </div>
       <div class="badges">
-        <span id="networkBadge" class="badge online">
-          <span class="dot"></span> Online
+        <span id="versionTagBadge" class="badge installed" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.3);">
+          ⚡ Bản 13-10
         </span>
-        <span id="modeBadge" class="badge">Kiểm tra...</span>
       </div>
     </header>
 
-    <!-- Hero Card / Cài đặt ứng dụng -->
-    <section class="card hero-card">
-      <span class="hero-tag">⚡ Phiên bản Web App PWA</span>
-      <h2 class="hero-title">Cài Đặt Trực Tiếp Vào Điện Thoại</h2>
-      <p class="hero-desc">
-        Ứng dụng được cài trực tiếp lên màn hình chính với 1 chạm. Tuyệt đối không cần tải file APK, không sợ bị trích xuất mã nguồn và tự động nhận bản cập nhật mới nhất.
-      </p>
-
-      <!-- Khối nút cài đặt (tự động hiện khi mở bằng trình duyệt) -->
-      <div id="installContainer" style="display: none;">
-        <button id="btnInstall" class="btn btn-primary" onclick="promptInstallApp()">
-          📲 Cài đặt ứng dụng vào điện thoại
-        </button>
-      </div>
-
-      <!-- Khối thông báo khi đã cài đặt -->
-      <div id="installedBanner" style="display: none; padding: 12px; background: rgba(16, 185, 129, 0.15); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
-        <p style="color: #6ee7b7; font-weight: 600; font-size: 0.95rem;">
-          ✓ Bạn đang mở ứng dụng ở chế độ màn hình chính (Standalone App)!
+    <!-- Khối Bảo Mật: Nhập Mã Để Mở Khóa Tải File -->
+    <section class="card hero-card" id="gatekeeperSection">
+      <!-- Trạng thái KHI CHƯA MỞ KHÓA -->
+      <div id="lockedState">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">🔒</div>
+        <span class="hero-tag" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">
+          Cổng Tải Được Bảo Vệ
+        </span>
+        <h2 class="hero-title">Nhập Mã Khách Hàng Để Mở Khóa</h2>
+        <p class="hero-desc">
+          Để bảo vệ bản quyền, file cài đặt và cập nhật chỉ được mở cho khách hàng được cấp quyền. Vui lòng nhập mã mở khóa để tiếp tục.
         </p>
+
+        <div style="max-width: 380px; margin: 0 auto;">
+          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+            <input 
+              type="text" 
+              id="passcodeInput" 
+              placeholder="Nhập mã mở khóa (VD: HKPICK88)..." 
+              style="flex: 1; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: rgba(15, 23, 42, 0.8); color: #fff; font-size: 1rem; outline: none;"
+              onkeypress="if(event.key === 'Enter') checkPasscode();"
+            />
+            <button class="btn btn-primary btn-sm" onclick="checkPasscode()" style="padding: 12px 20px; white-space: nowrap; background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);">
+              Mở Khóa 🔓
+            </button>
+          </div>
+          <p id="errorMsg" style="color: #ef4444; font-size: 0.85rem; display: none; font-weight: 600;">
+            ❌ Mã mở khóa không chính xác. Vui lòng kiểm tra lại!
+          </p>
+        </div>
       </div>
 
-      <!-- Hướng dẫn cho thiết bị iOS Safari -->
-      <div id="iosGuide" class="ios-guide">
-        💡 <strong>Người dùng iPhone/iPad:</strong> Bấm vào biểu tượng <strong>Chia sẻ (Share <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>)</strong> ở thanh dưới cùng Safari ➡️ Chọn <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong>.
+      <!-- Trạng thái KHI ĐÃ MỞ KHÓA THÀNH CÔNG -->
+      <div id="unlockedState" style="display: none;">
+        <div style="font-size: 2.5rem; margin-bottom: 8px;">⚡</div>
+        <span class="hero-tag" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+          ✓ Xác Thực Thành Công
+        </span>
+        <h2 class="hero-title">HKPick - Bản Mới Nhất (13-10)</h2>
+        <p class="hero-desc">
+          Tốc độ phản hồi 1ms siêu mượt. Đã tích hợp OCR nhận diện hình ảnh và tự động bỏ qua delay.
+        </p>
+
+        <div style="margin: 20px 0;">
+          <button id="btnDownload" class="btn btn-primary" onclick="downloadApp()" style="background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); font-size: 1.1rem; padding: 16px 28px; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.5);">
+            ⬇️ TẢI & CẬP NHẬT HKPICK (79.6 MB)
+          </button>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+            💡 Nếu máy đã có bản cũ: Cứ tải về và bấm Cài đặt để cập nhật đè lên không mất cấu hình.
+          </p>
+        </div>
+
+        <button class="btn btn-secondary btn-sm" onclick="lockPortal()" style="font-size: 0.8rem; opacity: 0.7;">
+          🔒 Khóa lại cổng tải
+        </button>
       </div>
     </section>
 
     <!-- Quản lý phiên bản & Kiểm tra cập nhật -->
     <section class="card version-card">
       <div class="version-info">
-        <span class="version-chip">v1.0.0</span>
+        <span class="version-chip" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+          v1.0.0 (1ms)
+        </span>
         <div>
-          <strong style="display: block; font-size: 0.95rem;">Trạng thái phiên bản</strong>
-          <span id="versionStatus" class="version-status">Hệ thống tự động đồng bộ khi có bản mới</span>
+          <strong style="display: block; font-size: 0.95rem;">HKPick Auto Tool</strong>
+          <span id="versionStatus" class="version-status">Phiên bản phát hành: 13-10-2026</span>
         </div>
       </div>
-      <button id="btnCheckUpdate" class="btn btn-secondary btn-sm" onclick="manualCheckUpdate()">
-        🔄 Kiểm tra cập nhật
+      <button id="btnCheckUpdate" class="btn btn-secondary btn-sm" onclick="checkNewVersion()">
+        🔄 Kiểm tra bản mới
       </button>
     </section>
 
-    <!-- Lợi ích / Tính năng bảo mật -->
-    <section class="features-grid">
-      <div class="feature-item">
-        <div class="feature-icon">🛡️</div>
-        <h3 class="feature-title">Không lộ file APK</h3>
-        <p class="feature-text">Người dùng sử dụng trực tiếp qua hệ thống WebAPK nội bộ của Android, không có file .apk trôi nổi để bị decompile dịch ngược.</p>
-      </div>
-
-      <div class="feature-item">
-        <div class="feature-icon">🚀</div>
-        <h3 class="feature-title">Tự động cập nhật</h3>
-        <p class="feature-text">Chỉ cần push bản mới lên GitHub, người dùng mở app sẽ nhận thông báo cập nhật tức thì chỉ với 1 chạm.</p>
-      </div>
-
-      <div class="feature-item">
-        <div class="feature-icon">📶</div>
-        <h3 class="feature-title">Hỗ trợ Offline</h3>
-        <p class="feature-text">Dữ liệu được lưu cache thông minh bằng Service Worker, mất mạng hoặc kết nối yếu vẫn mở dùng bình thường.</p>
-      </div>
-
-      <div class="feature-item">
-        <div class="feature-icon">🔒</div>
-        <h3 class="feature-title">Bảo mật HTTPS</h3>
-        <p class="feature-text">Hoạt động hoàn toàn qua giao thức mã hóa HTTPS miễn phí của GitHub Pages, an toàn tuyệt đối cho người dùng.</p>
-      </div>
+    <!-- Chi tiết bản cập nhật 13-10 -->
+    <section class="card" style="text-align: left;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; color: #fbbf24;">
+        📋 Điểm Mới Trong Bản Cập Nhật 13-10
+      </h3>
+      <ul style="padding-left: 20px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;" id="changelogList">
+        <li>Tối ưu độ trễ xử lý màn hình xuống mức <strong>1ms</strong>.</li>
+        <li>Tương thích tốt nhất với <strong>LDPlayer 9</strong> và các dòng máy Android mới.</li>
+        <li>Cải thiện độ nhạy nhận diện OCR và chống văng app khi chạy thời gian dài.</li>
+        <li>Bảo mật hệ thống và cơ chế cấp quyền Trợ năng mượt mà.</li>
+      </ul>
     </section>
 
-    <!-- Demo tính năng ứng dụng mẫu -->
-    <section class="card demo-section">
-      <h3 class="demo-title">📱 Tính năng thử nghiệm nội bộ</h3>
-      <p style="color: var(--text-muted); font-size: 0.88rem;">
-        Dữ liệu dưới đây được lưu trực tiếp trên bộ nhớ thiết bị của người dùng và hoạt động hoàn hảo khi mất mạng:
-      </p>
-      <div class="counter-box">
-        <button class="btn btn-secondary btn-sm" onclick="changeCount(-1)">- Giảm</button>
-        <span id="counterValue" class="counter-number">0</span>
-        <button class="btn btn-secondary btn-sm" onclick="changeCount(1)">+ Tăng</button>
+    <!-- Hướng dẫn cài đặt và thiết lập 1ms -->
+    <section class="card" style="text-align: left;">
+      <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; color: #38bdf8;">
+        📖 Hướng Dẫn Cài Đặt & Sử Dụng
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.88rem; color: var(--text-muted);">
+        <div>
+          <strong style="color: #fff;">1. Cài đặt vào máy / LDPlayer:</strong><br/>
+          Tải file về, mở file và chọn <strong>"Cài đặt"</strong> (Nếu có thông báo cảnh báo nguồn ngoài, chọn <em>"Vẫn cài đặt"</em>).
+        </div>
+        <div>
+          <strong style="color: #fff;">2. Cấp quyền Dịch vụ Trợ năng (Accessibility):</strong><br/>
+          Vào <em>Cài đặt thiết bị ➡️ Trợ năng (Accessibility) ➡️ Tìm "HKPick" ➡️ Bật Cho phép</em> để tool có thể tự động click.
+        </div>
+        <div>
+          <strong style="color: #fff;">3. Cấp quyền Hiển thị trên ứng dụng khác:</strong><br/>
+          Bật quyền để menu điều khiển nổi trên màn hình game.
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-      <p>Secure PWA Portal • Triển khai dễ dàng qua GitHub Pages</p>
+      <p>HKPick 1ms Portal • Hệ thống phân phối và cập nhật bảo mật</p>
     </footer>
 
   </div>
 
-  <!-- Toast thông báo khi phát hiện bản cập nhật mới -->
-  <div id="updateToast" class="update-toast">
-    <div class="toast-content">
-      <div class="toast-icon">✨</div>
-      <div>
-        <div class="toast-title">Có phiên bản mới!</div>
-        <div class="toast-sub">Cập nhật ngay để trải nghiệm các tính năng mới nhất.</div>
-      </div>
-    </div>
-    <div class="toast-actions">
-      <button class="btn btn-secondary btn-sm" onclick="dismissUpdateToast()">Để sau</button>
-      <button class="btn btn-primary btn-sm" onclick="applyUpdate()">Cập nhật ngay</button>
-    </div>
-  </div>
-
-  <!-- Javascript -->
+  <!-- Scripts -->
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
