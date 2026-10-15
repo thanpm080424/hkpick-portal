@@ -19,5 +19,5 @@ const APP_CONFIG = {
     "ADMIN"
   ],
   // Link file tải được bảo vệ (Chỉ lộ khi nhập đúng mật khẩu)
-  downloadUrl: "https://github.com/thanpm080424/hkpick-portal/releases/download/v1.0.0/HKPick_v1.0.0.apk"
+  downloadUrl: "https://github.com/thanpm080424/hkpick-portal/releases/download/v1.0.0/HKPick_BanMoiNhat_13-10_1ms.apk"
 };
