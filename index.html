@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Secure Web App - Ứng Dụng Web Bảo Mật</title>
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  
+  <!-- Cấu hình hiển thị độc lập trên di động -->
+  <meta name="theme-color" content="#6366f1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SecureApp" />
+
+  <!-- CSS Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <img src="icons/icon-192.png" alt="App Icon" class="brand-icon" />
+        <div>
+          <h1 class="brand-title">SecureApp</h1>
+          <p class="brand-sub">Bảo mật • Tự cập nhật • Không file APK</p>
+        </div>
+      </div>
+      <div class="badges">
+        <span id="networkBadge" class="badge online">
+          <span class="dot"></span> Online
+        </span>
+        <span id="modeBadge" class="badge">Kiểm tra...</span>
+      </div>
+    </header>
+
+    <!-- Hero Card / Cài đặt ứng dụng -->
+    <section class="card hero-card">
+      <span class="hero-tag">⚡ Phiên bản Web App PWA</span>
+      <h2 class="hero-title">Cài Đặt Trực Tiếp Vào Điện Thoại</h2>
+      <p class="hero-desc">
+        Ứng dụng được cài trực tiếp lên màn hình chính với 1 chạm. Tuyệt đối không cần tải file APK, không sợ bị trích xuất mã nguồn và tự động nhận bản cập nhật mới nhất.
+      </p>
+
+      <!-- Khối nút cài đặt (tự động hiện khi mở bằng trình duyệt) -->
+      <div id="installContainer" style="display: none;">
+        <button id="btnInstall" class="btn btn-primary" onclick="promptInstallApp()">
+          📲 Cài đặt ứng dụng vào điện thoại
+        </button>
+      </div>
+
+      <!-- Khối thông báo khi đã cài đặt -->
+      <div id="installedBanner" style="display: none; padding: 12px; background: rgba(16, 185, 129, 0.15); border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
+        <p style="color: #6ee7b7; font-weight: 600; font-size: 0.95rem;">
+          ✓ Bạn đang mở ứng dụng ở chế độ màn hình chính (Standalone App)!
+        </p>
+      </div>
+
+      <!-- Hướng dẫn cho thiết bị iOS Safari -->
+      <div id="iosGuide" class="ios-guide">
+        💡 <strong>Người dùng iPhone/iPad:</strong> Bấm vào biểu tượng <strong>Chia sẻ (Share <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>)</strong> ở thanh dưới cùng Safari ➡️ Chọn <strong>"Thêm vào Màn hình chính" (Add to Home Screen)</strong>.
+      </div>
+    </section>
+
+    <!-- Quản lý phiên bản & Kiểm tra cập nhật -->
+    <section class="card version-card">
+      <div class="version-info">
+        <span class="version-chip">v1.0.0</span>
+        <div>
+          <strong style="display: block; font-size: 0.95rem;">Trạng thái phiên bản</strong>
+          <span id="versionStatus" class="version-status">Hệ thống tự động đồng bộ khi có bản mới</span>
+        </div>
+      </div>
+      <button id="btnCheckUpdate" class="btn btn-secondary btn-sm" onclick="manualCheckUpdate()">
+        🔄 Kiểm tra cập nhật
+      </button>
+    </section>
+
+    <!-- Lợi ích / Tính năng bảo mật -->
+    <section class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">Không lộ file APK</h3>
+        <p class="feature-text">Người dùng sử dụng trực tiếp qua hệ thống WebAPK nội bộ của Android, không có file .apk trôi nổi để bị decompile dịch ngược.</p>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🚀</div>
+        <h3 class="feature-title">Tự động cập nhật</h3>
+        <p class="feature-text">Chỉ cần push bản mới lên GitHub, người dùng mở app sẽ nhận thông báo cập nhật tức thì chỉ với 1 chạm.</p>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">📶</div>
+        <h3 class="feature-title">Hỗ trợ Offline</h3>
+        <p class="feature-text">Dữ liệu được lưu cache thông minh bằng Service Worker, mất mạng hoặc kết nối yếu vẫn mở dùng bình thường.</p>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Bảo mật HTTPS</h3>
+        <p class="feature-text">Hoạt động hoàn toàn qua giao thức mã hóa HTTPS miễn phí của GitHub Pages, an toàn tuyệt đối cho người dùng.</p>
+      </div>
+    </section>
+
+    <!-- Demo tính năng ứng dụng mẫu -->
+    <section class="card demo-section">
+      <h3 class="demo-title">📱 Tính năng thử nghiệm nội bộ</h3>
+      <p style="color: var(--text-muted); font-size: 0.88rem;">
+        Dữ liệu dưới đây được lưu trực tiếp trên bộ nhớ thiết bị của người dùng và hoạt động hoàn hảo khi mất mạng:
+      </p>
+      <div class="counter-box">
+        <button class="btn btn-secondary btn-sm" onclick="changeCount(-1)">- Giảm</button>
+        <span id="counterValue" class="counter-number">0</span>
+        <button class="btn btn-secondary btn-sm" onclick="changeCount(1)">+ Tăng</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Secure PWA Portal • Triển khai dễ dàng qua GitHub Pages</p>
+    </footer>
+
+  </div>
+
+  <!-- Toast thông báo khi phát hiện bản cập nhật mới -->
+  <div id="updateToast" class="update-toast">
+    <div class="toast-content">
+      <div class="toast-icon">✨</div>
+      <div>
+        <div class="toast-title">Có phiên bản mới!</div>
+        <div class="toast-sub">Cập nhật ngay để trải nghiệm các tính năng mới nhất.</div>
+      </div>
+    </div>
+    <div class="toast-actions">
+      <button class="btn btn-secondary btn-sm" onclick="dismissUpdateToast()">Để sau</button>
+      <button class="btn btn-primary btn-sm" onclick="applyUpdate()">Cập nhật ngay</button>
+    </div>
+  </div>
+
+  <!-- Javascript -->
+  <script src="app.js"></script>
+</body>
+</html>
